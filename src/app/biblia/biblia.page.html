@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Bíblia</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <!-- Loop para listar os livros -->
+    <ion-item *ngFor="let livro of livrosAgrupados" (click)="abrirModalCapitulos(livro)">
+      <ion-label>
+        <h2>{{ livro.book_name }}</h2>
+      </ion-label>
+    </ion-item>
+
+    <!-- Lista de capítulos exibida apenas para o livro selecionado -->
+    <ion-list *ngFor="let livro of livrosAgrupados">
+      <ng-container *ngIf="livroSelecionado === livro.book_name">
+        <ion-item *ngFor="let capitulo of livro.capitulos">
+          <ion-label>Capítulo {{ capitulo }}</ion-label>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+  </ion-list>
+</ion-content>
