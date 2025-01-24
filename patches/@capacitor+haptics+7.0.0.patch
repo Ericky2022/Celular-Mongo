@@ -1,0 +1,276 @@
+diff --git a/node_modules/@capacitor/haptics/android/build.gradle b/node_modules/@capacitor/haptics/android/build.gradle
+index 9525b75..d24661e 100644
+--- a/node_modules/@capacitor/haptics/android/build.gradle
++++ b/node_modules/@capacitor/haptics/android/build.gradle
+@@ -1,59 +1,40 @@
+-ext {
+-    capacitorVersion = System.getenv('CAPACITOR_VERSION')
+-    junitVersion = project.hasProperty('junitVersion') ? rootProject.ext.junitVersion : '4.13.2'
+-    androidxAppCompatVersion = project.hasProperty('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.7.0'
+-    androidxJunitVersion = project.hasProperty('androidxJunitVersion') ? rootProject.ext.androidxJunitVersion : '1.2.1'
+-    androidxEspressoCoreVersion = project.hasProperty('androidxEspressoCoreVersion') ? rootProject.ext.androidxEspressoCoreVersion : '3.6.1'
+-}
+-
+-buildscript {
+-    repositories {
+-        google()
+-        mavenCentral()
+-        maven {
+-            url "https://plugins.gradle.org/m2/"
+-        }
+-    }
+-    dependencies {
+-        classpath 'com.android.tools.build:gradle:8.7.2'
+-        if (System.getenv("CAP_PLUGIN_PUBLISH") == "true") {
+-            classpath 'io.github.gradle-nexus:publish-plugin:1.3.0'
+-        }
+-    }
+-}
+-
+ apply plugin: 'com.android.library'
+-if (System.getenv("CAP_PLUGIN_PUBLISH") == "true") {
+-    apply plugin: 'io.github.gradle-nexus.publish-plugin'
+-    apply from: file('../../scripts/android/publish-root.gradle')
+-    apply from: file('../../scripts/android/publish-module.gradle')
++apply plugin: 'maven-publish'
++
++ext {
++    capacitorVersion = System.getenv('CAPACITOR_VERSION') ?: '5.0.0' // Certifique-se de usar a versão correta
++    junitVersion = '4.13.2'
++    androidxAppCompatVersion = '1.7.0'
++    androidxJunitVersion = '1.1.5'
++    androidxEspressoCoreVersion = '3.5.1'
+ }
+ 
+ android {
+     namespace "com.capacitorjs.plugins.haptics"
+-    compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 35
++    compileSdk 35
++
+     defaultConfig {
+-        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+-        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 35
++        minSdk 23
++        targetSdk 35
+         versionCode 1
+         versionName "1.0"
+         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+     }
++
+     buildTypes {
+         release {
+             minifyEnabled false
+-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
++            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+         }
+     }
++
+     lintOptions {
+         abortOnError false
+     }
++
+     compileOptions {
+-        sourceCompatibility JavaVersion.VERSION_21
+-        targetCompatibility JavaVersion.VERSION_21
+-    }
+-    publishing {
+-        singleVariant("release")
++        sourceCompatibility JavaVersion.VERSION_17
++        targetCompatibility JavaVersion.VERSION_17
+     }
+ }
+ 
+@@ -62,18 +43,27 @@ repositories {
+     mavenCentral()
+ }
+ 
+-
+ dependencies {
+     implementation fileTree(dir: 'libs', include: ['*.jar'])
+-
+-    if (System.getenv("CAP_PLUGIN_PUBLISH") == "true") {
+-        implementation "com.capacitorjs:core:$capacitorVersion"
+-    } else {
+-        implementation project(':capacitor-android')
+-    }
+-
++    implementation "com.capacitorjs:core:$capacitorVersion"
+     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+     testImplementation "junit:junit:$junitVersion"
+     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+ }
++
++// Remover ou comentar o bloco abaixo para evitar conflitos com o método publishing
++// afterEvaluate {
++//     publishing {
++//         publications {
++//             mavenJava(MavenPublication) {
++//                 from components.release
++//             }
++//         }
++//         repositories {
++//             maven {
++//                 url = uri("${buildDir}/repo")
++//             }
++//         }
++//     }
++// }
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml b/node_modules/@capacitor/haptics/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+new file mode 100644
+index 0000000..4ee1566
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/AndroidManifest.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.capacitorjs.plugins.haptics" >
++
++    <uses-sdk android:minSdkVersion="23" />
++
++    <uses-permission android:name="android.permission.VIBRATE" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json b/node_modules/@capacitor/haptics/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+new file mode 100644
+index 0000000..59a8374
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/aapt_friendly_merged_manifests/debug/aapt/output-metadata.json
+@@ -0,0 +1,18 @@
++{
++  "version": 3,
++  "artifactType": {
++    "type": "AAPT_FRIENDLY_MERGED_MANIFESTS",
++    "kind": "Directory"
++  },
++  "applicationId": "com.capacitorjs.plugins.haptics",
++  "variantName": "debug",
++  "elements": [
++    {
++      "type": "SINGLE",
++      "filters": [],
++      "attributes": [],
++      "outputFile": "AndroidManifest.xml"
++    }
++  ],
++  "elementType": "File"
++}
+\ No newline at end of file
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/aar_metadata/debug/aar-metadata.properties b/node_modules/@capacitor/haptics/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+new file mode 100644
+index 0000000..1211b1e
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/aar_metadata/debug/aar-metadata.properties
+@@ -0,0 +1,6 @@
++aarFormatVersion=1.0
++aarMetadataVersion=1.0
++minCompileSdk=1
++minCompileSdkExtension=0
++minAndroidGradlePluginVersion=1.0.0
++coreLibraryDesugaringEnabled=false
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/compile_r_class_jar/debug/R.jar b/node_modules/@capacitor/haptics/android/build/intermediates/compile_r_class_jar/debug/R.jar
+new file mode 100644
+index 0000000..5c4d56f
+Binary files /dev/null and b/node_modules/@capacitor/haptics/android/build/intermediates/compile_r_class_jar/debug/R.jar differ
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/compile_symbol_list/debug/R.txt b/node_modules/@capacitor/haptics/android/build/intermediates/compile_symbol_list/debug/R.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties b/node_modules/@capacitor/haptics/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+new file mode 100644
+index 0000000..5272cf7
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/incremental/debug/packageDebugResources/compile-file-map.properties
+@@ -0,0 +1 @@
++#Fri Jan 24 17:20:47 BRT 2025
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml b/node_modules/@capacitor/haptics/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+new file mode 100644
+index 0000000..c360f67
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/incremental/debug/packageDebugResources/merger.xml
+@@ -0,0 +1,2 @@
++<?xml version="1.0" encoding="utf-8"?>
++<merger version="3"><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="main" generated-set="main$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="debug" generated-set="debug$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\debug\res"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated$Generated" generated="true" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\build\generated\res\resValues\debug"/></dataSet><dataSet aapt-namespace="http://schemas.android.com/apk/res-auto" config="generated" generated-set="generated$Generated" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\build\generated\res\resValues\debug"/></dataSet><mergedItems/></merger>
+\ No newline at end of file
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/local_only_symbol_list/debug/R-def.txt b/node_modules/@capacitor/haptics/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+new file mode 100644
+index 0000000..78ac5b8
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/local_only_symbol_list/debug/R-def.txt
+@@ -0,0 +1,2 @@
++R_DEF: Internal format may change without notice
++local
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt b/node_modules/@capacitor/haptics/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+new file mode 100644
+index 0000000..0f23c6d
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/manifest_merge_blame_file/debug/manifest-merger-blame-debug-report.txt
+@@ -0,0 +1,11 @@
++1<?xml version="1.0" encoding="utf-8"?>
++2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++3    package="com.capacitorjs.plugins.haptics" >
++4
++5    <uses-sdk android:minSdkVersion="23" />
++6
++7    <uses-permission android:name="android.permission.VIBRATE" />
++7-->D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml:2:5-66
++7-->D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml:2:22-63
++8
++9</manifest>
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml b/node_modules/@capacitor/haptics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+new file mode 100644
+index 0000000..4ee1566
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/merged_manifest/debug/AndroidManifest.xml
+@@ -0,0 +1,9 @@
++<?xml version="1.0" encoding="utf-8"?>
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++    package="com.capacitorjs.plugins.haptics" >
++
++    <uses-sdk android:minSdkVersion="23" />
++
++    <uses-permission android:name="android.permission.VIBRATE" />
++
++</manifest>
+\ No newline at end of file
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/navigation_json/debug/navigation.json b/node_modules/@capacitor/haptics/android/build/intermediates/navigation_json/debug/navigation.json
+new file mode 100644
+index 0000000..0637a08
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/navigation_json/debug/navigation.json
+@@ -0,0 +1 @@
++[]
+\ No newline at end of file
+diff --git a/node_modules/@capacitor/haptics/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt b/node_modules/@capacitor/haptics/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+new file mode 100644
+index 0000000..d557658
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/intermediates/symbol_list_with_package_name/debug/package-aware-r.txt
+@@ -0,0 +1 @@
++com.capacitorjs.plugins.haptics
+diff --git a/node_modules/@capacitor/haptics/android/build/outputs/logs/manifest-merger-debug-report.txt b/node_modules/@capacitor/haptics/android/build/outputs/logs/manifest-merger-debug-report.txt
+new file mode 100644
+index 0000000..d2e4815
+--- /dev/null
++++ b/node_modules/@capacitor/haptics/android/build/outputs/logs/manifest-merger-debug-report.txt
+@@ -0,0 +1,20 @@
++-- Merging decision tree log ---
++manifest
++ADDED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml:1:1-3:12
++INJECTED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml:1:1-3:12
++	package
++		INJECTED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml
++	xmlns:android
++		ADDED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml:1:11-69
++uses-permission#android.permission.VIBRATE
++ADDED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml:2:5-66
++	android:name
++		ADDED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml:2:22-63
++uses-sdk
++INJECTED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml reason: use-sdk injection requested
++INJECTED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml
++INJECTED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml
++	android:targetSdkVersion
++		INJECTED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml
++	android:minSdkVersion
++		INJECTED from D:\trabalho-pessoal\Mongo\teste2\AppCelular-mongo\node_modules\@capacitor\haptics\android\src\main\AndroidManifest.xml
