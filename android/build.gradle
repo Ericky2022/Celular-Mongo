@@ -1,12 +1,39 @@
+// buildscript {
+//     ext {
+//         kotlin_version = '1.5.31'
+//     }
+//     repositories {
+//         google()
+//         mavenCentral()
+//     }
+
+//     dependencies {
+//         classpath 'com.android.tools.build:gradle:8.2.0' // Certifique-se de usar a versão compatível
+//         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22' // Versão Kotlin compatível
+//     }
+// }
+
+// allprojects {
+//     repositories {
+//         google()
+//         mavenCentral()
+//     }
+// }
+
+// task clean(type: Delete) {
+//     delete rootProject.buildDir
+// }
 buildscript {
+    ext {
+        kotlin_version = '1.5.31'
+    }
     repositories {
         google()
         mavenCentral()
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.2.0' // Certifique-se de usar a versão compatível
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22' // Versão Kotlin compatível
+        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -17,6 +44,15 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            project.android {
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_17
+                    targetCompatibility JavaVersion.VERSION_17
+                }
+            }
+        }
+    }
 }
