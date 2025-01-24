@@ -41,7 +41,7 @@ index 9525b75..d24661e 100644
 +    androidxJunitVersion = '1.1.5'
 +    androidxEspressoCoreVersion = '3.5.1'
  }
- 
+
  android {
      namespace "com.capacitorjs.plugins.haptics"
 -    compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 35
@@ -70,8 +70,8 @@ index 9525b75..d24661e 100644
      }
 +
      compileOptions {
--        sourceCompatibility JavaVersion.VERSION_21
--        targetCompatibility JavaVersion.VERSION_21
+-        sourceCompatibility JavaVersion.VERSION_17
+-        targetCompatibility JavaVersion.VERSION_17
 -    }
 -    publishing {
 -        singleVariant("release")
@@ -79,11 +79,11 @@ index 9525b75..d24661e 100644
 +        targetCompatibility JavaVersion.VERSION_17
      }
  }
- 
+
 @@ -62,18 +43,27 @@ repositories {
      mavenCentral()
  }
- 
+
 -
  dependencies {
      implementation fileTree(dir: 'libs', include: ['*.jar'])
