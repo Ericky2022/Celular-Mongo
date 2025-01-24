@@ -38,4 +38,13 @@ export class CapitulosModalComponent {
         }
       );
   }
+
+  toggleVersiculos(capitulo: number) {
+    if (this.capituloSelecionado === capitulo) {
+      this.capituloSelecionado = null;
+    } else {
+      this.capituloSelecionado = capitulo;
+      this.carregarVersiculos(capitulo);
+    }
+  }
 }

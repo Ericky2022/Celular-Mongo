@@ -14,7 +14,12 @@ export class VersiculosService {
     return this.http.get<any>(this.apiUrl);
   }
 
-  getVersiculosPorLivroCapitulo(livro: string, capitulo: number) {
-    return this.http.get<any[]>(`/api/versiculos?livro=${livro}&capitulo=${capitulo}`);
+  // getVersiculosPorLivroCapitulo(livro: string, capitulo: number) {
+  //   return this.http.get<any[]>(`/api/versiculos?livro=${livro}&capitulo=${capitulo}`);
+  // }
+
+  getVersiculosPorLivroCapitulo(livro: string, capitulo: number): Observable<any[]> {
+    const url = `${this.apiUrl}/versiculos?livro=${encodeURIComponent(livro)}&capitulo=${capitulo}`;
+    return this.http.get<any[]>(url);
   }
 }

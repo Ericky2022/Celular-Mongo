@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>{{ livro.book_name }}</ion-title>
     <ion-buttons slot="end">
@@ -7,16 +7,16 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content> -->
   <!-- Lista de capítulos -->
-  <ion-list *ngIf="!capituloSelecionado">
+  <!-- <ion-list *ngIf="!capituloSelecionado">
     <ion-item *ngFor="let capitulo of livro.capitulos" (click)="carregarVersiculos(capitulo)">
       <ion-label>Capítulo {{ capitulo }}</ion-label>
     </ion-item>
-  </ion-list>
+  </ion-list> -->
 
   <!-- Lista de versículos -->
-  <ion-list *ngIf="capituloSelecionado">
+  <!-- <ion-list *ngIf="capituloSelecionado">
     <ion-item *ngFor="let versiculo of versiculos">
       <ion-label>
         <h2>{{ versiculo.verse }}</h2>
@@ -26,5 +26,35 @@
     <ion-item>
       <ion-button expand="block" (click)="capituloSelecionado = null">Voltar</ion-button>
     </ion-item>
+  </ion-list>
+</ion-content> -->
+
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ livro.book_name }} capitulo  </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="fecharModal()">Fechar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Lista de capítulos -->
+  <ion-list>
+    <ion-card *ngFor="let capitulo of livro.capitulos" (click)="toggleVersiculos(capitulo)">
+      <ion-card-header>
+        <ion-card-title>Capítulo {{ capitulo }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content *ngIf="capituloSelecionado === capitulo">
+        <ion-list>
+          <ion-item *ngFor="let versiculo of versiculos">
+            <ion-label>
+              <h2>{{ versiculo.verse }}</h2>
+              <p>{{ versiculo.text }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
   </ion-list>
 </ion-content>
